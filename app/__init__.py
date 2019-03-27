@@ -6,6 +6,7 @@
 from flask import Flask
 
 from app.models.base import db
+from app import models
 
 __author__ = 'Henry'
 
@@ -15,6 +16,11 @@ def register_blueprint(app):
     app.register_blueprint(create_blueprint_v1(), url_prefix='/v1')
 
 
+def register_plugins(app):
+    # 注册模型
+    db.init_app(app)
+
+
 def create_app():
     app = Flask(__name__)
 
@@ -22,11 +28,11 @@ def create_app():
     app.config.from_object('app.config.secure')
     app.config.from_object('app.config.settings')
 
-    # 注册数据模型
-    db.init_app(app)
-
     # 注册蓝图
     register_blueprint(app)
+
+    # 注册插件
+    register_plugins(app)
 
     return app
 
