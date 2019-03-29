@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
     @description: 环境配置
-    @copyright: (c) 2019/3/21 14:53 by Henry.
 """
 
 __author__ = 'Henry'

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    @description: 
-    @copyright: (c) 2019/3/21 16:57 by Henry.
+    @description:
 """
 
 __author__ = 'Henry'
@@ -24,7 +23,7 @@ class Redprint:
             url_prefix = '/' + self.name
 
         for f, rule, options in self.mound:
-            endpoint = options.pop('endpoint', f.__name__)
+            endpoint = self.name + '+' + options.pop('endpoint', f.__name__)
             bp.add_url_rule(url_prefix + rule, endpoint, f, **options)
 
 

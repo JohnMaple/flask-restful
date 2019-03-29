@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 """
-    @description: 
-    @copyright: (c) 2019/3/21 16:47 by Henry.
+    @description:
 """
 from app.libs.redprint import Redprint
 
 __author__ = 'Henry'
 
 api = Redprint('book')
+
+
+@api.route('/search', methods=['GET'])
+def search():
+    pass
 
 
 @api.route('', methods=['GET'])

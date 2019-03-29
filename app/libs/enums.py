@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    @description: 
-    @copyright: (c) 2019/3/27 16:10 by Henry.
+    @description:
 """
 from enum import Enum
 

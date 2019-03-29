@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 """
     @description:
-    @copyright: (c) 2019/3/27 16:15 by Henry.
 """
-from wtforms import Form, StringField, IntegerField
+from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired, length, Email, Regexp, ValidationError
 
 from app.libs.enums import ClientTypeEnum
 from app.models.user import User
+from app.validators.base import BaseForm as Form
 
 __author__ = 'Henry'
 
 
 class ClientForm(Form):
-    account = StringField(validators=[DataRequired(), length(min=5, max=32)])
+    account = StringField(validators=[DataRequired(message='不允许为空'), length(min=5, max=32)])
     secret = StringField()
     type = IntegerField(validators=[DataRequired()])
 
@@ -27,7 +27,7 @@ class ClientForm(Form):
 
 class UserEmailForm(ClientForm):
     account = StringField(validators=[Email(message='invalidate email')])
-    secret = StringField(validators=[DataRequired(), Regexp(r'^[A-Za-z0-9_*&$#@]{6,22}&')])
+    secret = StringField(validators=[DataRequired(), Regexp(r'^[A-Za-z0-9_*&$#@]{6,22}$')])
     nickname = StringField(validators=[DataRequired(), length(min=2, max=22)])
 
     def validate_account(self, value):
@@ -36,9 +36,15 @@ class UserEmailForm(ClientForm):
         :return:
         """
         if User.query.filter_by(email=value.data).first():
-            raise ValidationError()
+            raise ValidationError('邮箱已存在')
 
 
+class BookSearchForm(Form):
+    q = StringField(validators=[DataRequired()])
+
+
+class TokenForm(Form):
+    token = StringField(validators=[DataRequired()])
 
 
 

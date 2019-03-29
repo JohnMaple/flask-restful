@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-    @description: 
-    @copyright: (c) 2019/3/21 16:29 by Henry.
+    @description:
 """
-import datetime
+from datetime import datetime
 from contextlib import contextmanager
 
-from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy, BaseQuery
 from sqlalchemy import Column, Integer, SmallInteger
+
+from app.libs.error_code import NotFound
 
 __author__ = 'Henry'
 
@@ -24,7 +25,30 @@ class SQLAlchemy(_SQLAlchemy):
             raise e
 
 
-db = SQLAlchemy()
+class Query(BaseQuery):
+    """
+    改写内置的方法
+    """
+    def filter_by(self, **kwargs):
+        if 'status' not in kwargs.keys():
+            kwargs['status'] = 1
+
+        return super(Query, self).filter_by(**kwargs)
+
+    def get_or_404(self, ident):
+        rv = self.get(ident)
+        if not rv:
+            raise NotFound()
+        return rv
+
+    def first_or_404(self):
+        rv = self.first()
+        if not rv:
+            raise NotFound()
+        return rv
+
+
+db = SQLAlchemy(query_class=Query)
 
 
 class Base(db.Model):
@@ -54,5 +78,22 @@ class Base(db.Model):
 
     def delete(self):
         self.status = 0
+
+    def __getitem__(self, item):
+        return getattr(self, item)
+
+    # 定义返回字典中的键
+    def keys(self):
+        return self.fields
+
+    def hide(self, *keys):
+        for key in keys:
+            self.fields.remove(key)
+        return self
+
+    def append(self, *keys):
+        for key in keys:
+            self.fields.append(key)
+        return self
 
 

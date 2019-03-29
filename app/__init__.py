@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 """
     @description: 初始化项目，加载配置项，注册蓝图、数据库等
-    @copyright: (c) 2019/3/21 14:16 by Henry.
 """
-from flask import Flask
+from .app import Flask
 
 from app.models.base import db
 from app import models
